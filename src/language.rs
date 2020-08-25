@@ -1,6 +1,5 @@
-use std::str::FromStr;
-use failure;
 use failure::format_err;
+use std::str::FromStr;
 
 const PUNCTUATION: &str = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
 const SPACE: &str = " ";
@@ -62,14 +61,10 @@ impl ToString for Language {
 
 impl Language {
     pub fn punctuation(&self) -> &'static str {
-        match self {
-            _ => PUNCTUATION
-        }
+        PUNCTUATION
     }
 
     pub fn default_separator(&self) -> &'static str {
-        match self {
-            _ => SPACE
-        }
+        SPACE
     }
 }

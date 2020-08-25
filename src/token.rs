@@ -23,7 +23,12 @@ pub struct Token {
 
 impl Token {
     pub fn new(value: String, range: Range<usize>, char_range: Range<usize>) -> Self {
-        Token { value, range, char_range, _normalized: None }
+        Token {
+            value,
+            range,
+            char_range,
+            _normalized: None,
+        }
     }
 
     pub fn normalized_value(&mut self) -> String {
@@ -36,21 +41,23 @@ impl Token {
     }
 }
 
-pub fn tokenize(input: &str, language: Language) -> Vec<Token> {
+pub fn tokenize(input: &str, _: Language) -> Vec<Token> {
     lazy_static! {
         static ref WORD_REGEX: Regex = RegexBuilder::new(r"\w+").unicode(true).build().unwrap();
-        static ref SYMBOL_REGEX: Regex = RegexBuilder::new(&format!("[?!&%{}]", CURRENCIES)).unicode(true).build().unwrap();
+        static ref SYMBOL_REGEX: Regex = RegexBuilder::new(&format!("[?!&%{}]", CURRENCIES))
+            .unicode(true)
+            .build()
+            .unwrap();
     }
-    match language {
-        _ => _regex_tokenization(input, &[&WORD_REGEX, &SYMBOL_REGEX])
-    }
+    _regex_tokenization(input, &[&WORD_REGEX, &SYMBOL_REGEX])
 }
-
 
 pub fn tokenize_light(input: &str, language: Language) -> Vec<String> {
-    tokenize(input, language).into_iter().map(|t| t.value).collect_vec()
+    tokenize(input, language)
+        .into_iter()
+        .map(|t| t.value)
+        .collect_vec()
 }
-
 
 fn _regex_tokenization(input: &str, regexes: &[&Regex]) -> Vec<Token> {
     let mut non_overlapping_tokens: Vec<Token> = vec![];
@@ -65,10 +72,15 @@ fn _regex_tokenization(input: &str, regexes: &[&Regex]) -> Vec<Token> {
                     char_range: convert_to_char_range(input, &range),
                     value,
                     range,
-                    _normalized: None
+                    _normalized: None,
                 }
             })
-            .filter(|t| non_overlapping_tokens.iter().find(|t2| ranges_overlap(&t.range, &t2.range)).is_none())
+            .filter(|t| {
+                non_overlapping_tokens
+                    .iter()
+                    .find(|t2| ranges_overlap(&t.range, &t2.range))
+                    .is_none()
+            })
             .collect();
 
         non_overlapping_tokens.append(&mut tokens);
@@ -89,8 +101,10 @@ pub fn compute_all_ngrams(tokens: &[&str], max_ngram_size: usize) -> Vec<Ngram> 
 
         for end in start..max_end {
             let ngram_item = if let Some(last_ngram_item) = last_ngram_item {
-                (format!("{} {}", last_ngram_item.0, tokens[end]),
-                 consume_and_concat(last_ngram_item.1, vec![end]))
+                (
+                    format!("{} {}", last_ngram_item.0, tokens[end]),
+                    consume_and_concat(last_ngram_item.1, vec![end]),
+                )
             } else {
                 (tokens[start].to_string(), vec![start])
             };
@@ -145,7 +159,7 @@ mod tests {
                 range: 6..11,
                 char_range: 6..11,
                 _normalized: None,
-            }
+            },
         ];
         assert_eq!(retrieved, expected);
     }
@@ -238,13 +252,15 @@ mod tests {
 
     #[test]
     fn compute_all_ngrams_works() {
-        let result = compute_all_ngrams(&vec!["a", "b", "c"], 3);
-        let expected: Vec<Ngram> = vec![("a".to_string(), vec![0]),
-                                        ("a b".to_string(), vec![0, 1]),
-                                        ("a b c".to_string(), vec![0, 1, 2]),
-                                        ("b".to_string(), vec![1]),
-                                        ("b c".to_string(), vec![1, 2]),
-                                        ("c".to_string(), vec![2])];
+        let result = compute_all_ngrams(&["a", "b", "c"], 3);
+        let expected: Vec<Ngram> = vec![
+            ("a".to_string(), vec![0]),
+            ("a b".to_string(), vec![0, 1]),
+            ("a b c".to_string(), vec![0, 1, 2]),
+            ("b".to_string(), vec![1]),
+            ("b c".to_string(), vec![1, 2]),
+            ("c".to_string(), vec![2]),
+        ];
         assert_eq!(result, expected)
     }
 
@@ -255,7 +271,7 @@ mod tests {
             value: "HellÖ".to_string(),
             range: 0..6,
             char_range: 0..5,
-            _normalized: None
+            _normalized: None,
         };
 
         // When

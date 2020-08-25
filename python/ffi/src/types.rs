@@ -45,7 +45,7 @@ impl CReprOf<Vec<Token>> for CTokenArray {
             data: Box::into_raw(
                 input
                     .into_iter()
-                    .map(|token| CToken::c_repr_of(token))
+                    .map(CToken::c_repr_of)
                     .collect::<Result<Vec<CToken>, _>>()
                     .context("Could not convert Vector of Token to C Repr")?
                     .into_boxed_slice(),
@@ -119,7 +119,7 @@ impl CReprOf<Vec<Ngram>> for CNgramArray {
             data: Box::into_raw(
                 input
                     .into_iter()
-                    .map(|ngram| CNgram::c_repr_of(ngram))
+                    .map(CNgram::c_repr_of)
                     .collect::<Result<Vec<CNgram>, _>>()
                     .context("Could not convert Vector of Ngram to C Repr")?
                     .into_boxed_slice(),

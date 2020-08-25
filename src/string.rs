@@ -91,10 +91,7 @@ pub fn normalize(string: &str) -> String {
 /// assert_eq!("ceaA".to_owned(), remove_diacritics("çéaÀ"));
 /// ```
 pub fn remove_diacritics(string: &str) -> String {
-    string
-        .chars()
-        .flat_map(|c| remove_combination_marks(c))
-        .collect()
+    string.chars().flat_map(remove_combination_marks).collect()
 }
 
 fn remove_combination_marks(character: char) -> Option<char> {
