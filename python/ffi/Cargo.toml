@@ -12,4 +12,4 @@ crate-type = ["cdylib"]
 failure = "0.1"
 libc = "0.2"
 ffi-utils = { git = "https://github.com/snipsco/snips-utils-rs", rev = "291ce1d" }
-snips-nlu-utils = { git = "https://github.com/snipsco/snips-nlu-utils", tag = "0.9.1" }
+snips-nlu-utils = { git = "https://github.com/ryanhossain9797/snips-nlu-utils", tag = "0.9.1" }
